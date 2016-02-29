@@ -1,0 +1,15 @@
+    <!-- <form style="width: 40%">
+    Category
+    <select id="Category">
+        {% for category in  categories %}
+            <option value="{{category}}"> {{category}}
+        {% endfor %}
+    </select>
+    <input type="submit" value="Get lca Score" />
+</form> -->
+<br>
+<br>
+<form action="" method="post">{% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="Get lca Score" />
+</form>
