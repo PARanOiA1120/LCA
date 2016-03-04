@@ -18,11 +18,11 @@ class Classification(models.Model):
         return self.classification
 
 
-# class Activity(models.Model):
-#     classification = models.ForeignKey(Classification, on_delete=models.CASCADE)
-#     activity = models.CharField(max_length=1000)
-#     def __str__(self):
-#         return self.activity
+class Activity(models.Model):
+    classification = models.ForeignKey(Classification, on_delete=models.CASCADE)
+    activity = models.CharField(max_length=1000)
+    def __str__(self):
+        return self.activity
 
 
 

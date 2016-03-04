@@ -3,17 +3,23 @@ from .models import Category
 
 
 class lcaScoreForm(forms.Form):
-	cateID = 0
-	categories = []
-	for item in Category.objects.all():
-		categories.append([cateID, item])
-		cateID = cateID + 1
+	Category = forms.CharField(required=False)
+	Classification = forms.CharField(required=False)
+	def clean_category(self):
+		Category = self.cleaned_data.get('Category')
+		return category
 
-	category = forms.ChoiceField(widget = forms.Select(), choices = categories, required = True)
+	# cateID = 0
+	# categories = []
+	# for item in Category.objects.all():
+	# 	categories.append([cateID, item])
+	# 	cateID = cateID + 1
 
-	def clean_category_name(self):
-		category_name = self.cleaned_data.get('category_name')
-		return category_name
+	# category = forms.ChoiceField(widget = forms.Select(), choices = categories, required = True)
+
+	# # def clean_category_name(self):
+	# # 	category_name = self.cleaned_data.get('category_name')
+	# # 	return category_name
 	
 	# classiID = 0
 	# activities = []
@@ -22,6 +28,10 @@ class lcaScoreForm(forms.Form):
 	# classification = forms.ChoiceField(widget = forms.Select(), choices = activities, required = True)
 
 
+class ContactForm(forms.Form):
+	full_name = forms.CharField()
+	email = forms.EmailField()
+	message = forms.CharField()
 
 
 # class lcaScoreForm(forms.Form):

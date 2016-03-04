@@ -7,7 +7,7 @@ from django.views import generic
 from django.views.decorators.csrf import csrf_protect
 from django.core.context_processors import csrf
 
-from .forms import lcaScoreForm
+from .forms import lcaScoreForm, ContactForm
 from .models import Category, Classification
 
 from brightway2 import *
@@ -37,8 +37,6 @@ def index(request):
     #             category.classification_set.create(classification = item[1])
             # c = category.classification_set.filter(classification = item[1])
             # c.delete()
-
-
             
 
     # activities = [(activity.get('classifications'), activity.get('name')) for activity in db]
@@ -77,19 +75,40 @@ def index(request):
 
     form = lcaScoreForm(request.POST or None)
 
-    c = Context({
+    context = {
         'form': form,
         'categories': Category.objects.all(), 
-    })
+        'category_picked':'',
+        'classifications': '',
 
+    }
 
     if form.is_valid():
         # instance = form.save(commit=False)
-        print(request.POST.get('category_name'))
+        category_selected = request.POST.get("Category")
+        filtered_classi = Category.objects.get(category_name = category_selected).classification_set.all()
+
+        context = {
+            'form': form,
+            'categories': Category.objects.all(),
+            'category_picked':category_selected, 
+            'classifications': filtered_classi,
+        }
 
 
-    return render(request, "lcaApp/index.html", c)
+    return render(request, "lcaApp/index.html", context)
     #return HttpResponse(loader.get_template('lcaApp/index.html').render(c))
+
+
+
+def contact(request):
+    form = ContactForm(request.POST or None)
+
+    context = {
+        'form': form,
+    }
+    return render(request, "lcaApp/contact.html", context)
+
 
 def detail(request, question_id):
     return HttpResponse("You're looking at question %s." % question_id)

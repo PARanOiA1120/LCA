@@ -1,4 +1,27 @@
-    <!-- <form style="width: 40%">
+<form method="POST" action="">{% csrf_token %}
+    Category &nbsp;&nbsp;<input style="width:350px;" list="Category" name="Category" value="{{category_picked}}">
+    <datalist id="Category">
+        {% for category in  categories %}
+            <option value="{{category}}"> {{category}}
+        {% endfor %}
+    </datalist>
+    <br>
+    <br>
+    Classification&nbsp;&nbsp; <input style="width:350px;" list="Classification" name="Classification">
+    <datalist id="Classification">
+        {% for classi in  classifications %}
+            <option value="{{classi}}"> {{classi}}
+        {% endfor %}
+    </datalist>
+    <br>
+    <br>
+    <input type="submit" value="Get lca Score" />
+</form>
+
+
+
+
+<!-- <form style="width: 40%" method="POST" action="">{% csrf_token %}
     Category
     <select id="Category">
         {% for category in  categories %}
@@ -7,9 +30,10 @@
     </select>
     <input type="submit" value="Get lca Score" />
 </form> -->
-<br>
-<br>
-<form action="" method="post">{% csrf_token %}
+
+
+
+<!-- <form method="POST" action="">{% csrf_token %}
     {{form.as_p}}
     <input type="submit" value="Get lca Score" />
-</form>
+</form> -->
