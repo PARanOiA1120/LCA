@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.core.context_processors import csrf
 
 from .forms import lcaScoreForm, ContactForm
-from .models import Category, Classification
+from .models import Category, Classification, Activity
 
 from brightway2 import *
 from scipy.stats import kendalltau
@@ -18,6 +18,9 @@ import numpy as np
 
 def index(request):
     db = Database("ecoinvent 3.2 cutoff")
+
+
+
 
     #classifications = [activity.get('classifications') for activity in db]
 
@@ -39,7 +42,16 @@ def index(request):
             # c.delete()
             
 
-    # activities = [(activity.get('classifications'), activity.get('name')) for activity in db]
+    activities = [activity for activity in db]
+    for activity in activities:
+        for classi in activity.get('classifications'):
+            category = Category.objects.get(category_name = classi[0])
+            classification = Classification.objects.get(category = category, classification = classi[1])
+            if len(Activity.objects.filter(category = category, classification = classification, activity_name = activity.get('name'))) == 0:
+                ac = Activity(category = category, classification = classification, activity_name = activity.get('name'))
+                ac.save()
+
+
 
     # for activity in activities:
     #     if len(Activity.objects.filter())
