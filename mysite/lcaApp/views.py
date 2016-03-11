@@ -94,13 +94,37 @@ def index(request):
         cate_Obj = Category.objects.get(category_name = category_selected)
         filtered_classi = cate_Obj.classification_set.all()
 
+        context = {
+            'form': form,
+            'categories': Category.objects.all(),
+            'category_picked':category_selected, 
+            'classifications': filtered_classi,
+            'classification_picked': '',
+            'activities': '',
+            'activity_picked': '',
+            'lcaScore': '',
+        }
+
 
         #filter activity list based on category and classification selected
-        if(classification_selected != ''):
+        if(classification_selected != None):
             classi_Obj = Classification.objects.get(category = cate_Obj, classification = classification_selected)
-            filtered_acti = [ac.activity_name for ac in Activity.objects.filter(category = cate_Obj, classification = classi_Obj)]            
+            filtered_acti = [ac.activity_name for ac in Activity.objects.filter(category = cate_Obj, classification = classi_Obj)]
+            context = {
+                'form': form,
+                'categories': Category.objects.all(),
+                'category_picked':category_selected, 
+                'classifications': filtered_classi,
+                'classification_picked': classification_selected,
+                'activities': filtered_acti,
+                'activity_picked': '',
+                'lcaScore': '',
+            }
 
-        if(activity_selected != ''):
+
+
+
+        if(activity_selected != None):
             gwp, usetox = ('IPCC 2013', 'climate change', 'GWP 100a'), ('USEtox', 'human toxicity', 'total')
             for activity in db:
                 if (activity.get('name') == activity_selected):
@@ -109,19 +133,16 @@ def index(request):
                     lca.lcia()
                     lcaScore = lca.score
                     break
-
-
-
-        context = {
-            'form': form,
-            'categories': Category.objects.all(),
-            'category_picked':category_selected, 
-            'classifications': filtered_classi,
-            'classification_picked': classification_selected,
-            'activities': filtered_acti,
-            'activity_picked': activity_selected,
-            'lcaScore': lcaScore,
-        }
+            context = {
+                'form': form,
+                'categories': Category.objects.all(),
+                'category_picked':category_selected, 
+                'classifications': filtered_classi,
+                'classification_picked': classification_selected,
+                'activities': filtered_acti,
+                'activity_picked': activity_selected,
+                'lcaScore': lcaScore,
+            }
 
 
     return render(request, "lcaApp/index.html", context)

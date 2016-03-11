@@ -1,32 +1,125 @@
-<form method="POST" action="">{% csrf_token %}
-    Category &nbsp;&nbsp;<input style="width:350px;" list="Category" name="Category" value="{{category_picked}}">
-    <datalist id="Category">
-        {% for category in  categories %}
-            <option value="{{category}}"> {{category}}
-        {% endfor %}
-    </datalist>
-    <br>
-    <br>
-    Classification&nbsp;&nbsp; <input style="width:350px;" list="Classification" name="Classification" value="{{classification_picked}}">
-    <datalist id="Classification">
-        {% for classi in  classifications %}
-            <option value="{{classi}}"> {{classi}}
-        {% endfor %}
-    </datalist>
-    <br>
-    <br>
-    Activity&nbsp;&nbsp; <input style="width:350px;" list="Activity" name="Activity" value="{{activity_picked}}">
-    <datalist id="Activity">
-        {% for ac in activities %}
-            <option value="{{ac}}"> {{ac}}
-        {% endfor %}
-    </datalist>
-    <br>
-    <br>
-    <input type="submit" value="Get lca Score" />
-</form>
+<!DOCTYPE html>
+<html>
+    <head>
+        <style type="text/css">
+            html, body{
+                width: 100%;
+                height: 100%;
+                margin-left: 0px;
+                margin-top: 0px;
+                text-align: center;
+            }
 
-<p>{{lcaScore}}</p>
+            body {
+                min-width: 680px;
+            }
+
+            header{
+                background: darkred;
+                height: 30px;
+                padding-top: 5px;
+                padding-left: 10px;
+                padding-right: 10px;
+                
+            }
+            
+            h1, h2 {
+                  margin: 0;
+                  color: antiquewhite;
+            }
+            
+            h1 {
+                font-size: 17px;
+                float: left;   
+            }
+            
+            h2 {
+                font-size: 17px;
+                float: right;
+            }
+
+            form {
+                margin-top: 100px;
+            }
+
+            select {
+                background: black;
+            }
+
+            p {
+                color: darkred;
+                background: floralwhite; 
+                padding: 60px 50px; 
+                width: 150px; 
+                opacity: 0.7; 
+                margin-left: auto; 
+                margin-right: auto;
+                font-weight: bold;
+                font-size: 20px;
+            }
+        </style>
+
+
+    </head>
+
+
+    <body>
+        <header>
+            <h1>Ecoinvent Lifecycle Management Tool</h1>
+            <h2>Login</h2>
+        </header>  
+
+        <form method="POST" action="">{% csrf_token %}
+            <h3>LCA Calculator</h3>
+            <br>
+            <br>
+            Category &nbsp;&nbsp;<input style="width:350px;" list="Category" name="Category" value="{{category_picked}}">
+            <datalist id="Category">
+                {% for category in  categories %}
+                    <option value="{{category}}"> {{category}}
+                {% endfor %}
+            </datalist>
+            <br>
+            <br>
+            
+            {% if  category_picked != '' %}
+            Classification&nbsp;&nbsp; <input style="width:350px;" list="Classification" name="Classification" value="{{classification_picked}}">
+            <datalist id="Classification">
+                {% for classi in  classifications %}
+                    <option value="{{classi}}"> {{classi}}
+                {% endfor %}
+            </datalist>
+            <br>
+            <br>
+             {% endif %}
+        
+            {% if  classification_picked != '' %}
+            Activity&nbsp;&nbsp; <input style="width:350px;" list="Activity" name="Activity" value="{{activity_picked}}">
+            <datalist id="Activity">
+                {% for ac in activities %}
+                    <option value="{{ac}}"> {{ac}}
+                {% endfor %}
+            </datalist>
+            <br>
+            <br>
+            {% endif %}
+
+            <input type="submit" value="submit" />
+
+        </form>
+        <br>
+        <br>
+
+        {% if  lcaScore != '' %}
+        <p id="score">{{lcaScore}}</p>
+        {% endif %}
+
+    </body>
+
+</html>
+
+
+
 
 
 
