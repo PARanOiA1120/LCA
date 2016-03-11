@@ -7,7 +7,7 @@
     </datalist>
     <br>
     <br>
-    Classification&nbsp;&nbsp; <input style="width:350px;" list="Classification" name="Classification">
+    Classification&nbsp;&nbsp; <input style="width:350px;" list="Classification" name="Classification" value="{{classification_picked}}">
     <datalist id="Classification">
         {% for classi in  classifications %}
             <option value="{{classi}}"> {{classi}}
@@ -15,8 +15,18 @@
     </datalist>
     <br>
     <br>
+    Activity&nbsp;&nbsp; <input style="width:350px;" list="Activity" name="Activity" value="{{activity_picked}}">
+    <datalist id="Activity">
+        {% for ac in activities %}
+            <option value="{{ac}}"> {{ac}}
+        {% endfor %}
+    </datalist>
+    <br>
+    <br>
     <input type="submit" value="Get lca Score" />
 </form>
+
+<p>{{lcaScore}}</p>
 
 
 

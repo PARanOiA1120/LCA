@@ -19,9 +19,7 @@ import numpy as np
 def index(request):
     db = Database("ecoinvent 3.2 cutoff")
 
-
-
-
+    #setting up database
     #classifications = [activity.get('classifications') for activity in db]
 
     # add item to Category
@@ -42,36 +40,22 @@ def index(request):
             # c.delete()
             
 
-    activities = [activity for activity in db]
-    for activity in activities:
-        for classi in activity.get('classifications'):
-            category = Category.objects.get(category_name = classi[0])
-            classification = Classification.objects.get(category = category, classification = classi[1])
-            if len(Activity.objects.filter(category = category, classification = classification, activity_name = activity.get('name'))) == 0:
-                ac = Activity(category = category, classification = classification, activity_name = activity.get('name'))
-                ac.save()
-
-
-
+    # activities = [activity for activity in db]
     # for activity in activities:
-    #     if len(Activity.objects.filter())
+    #     for classi in activity.get('classifications'):
+    #         category = Category.objects.get(category_name = classi[0])
+    #         classification = Classification.objects.get(category = category, classification = classi[1])
+    #         if len(Activity.objects.filter(category = category, classification = classification, activity_name = activity.get('name'))) == 0:
+    #             ac = Activity(category = category, classification = classification, activity_name = activity.get('name'))
+    #             ac.save()
 
 
-    # print(db.random())
-
-     # num_exchanges = [activity.name for activity in db]
-     # print(num_exchanges)
 
     # LCA calculation
     # lca = LCA(demand={db.random(): 1}, method=methods.random())
     
     # LCIA correlation
-    # gwp, usetox = ('IPCC 2013', 'climate change', 'GWP 100a'), ('USEtox', 'human toxicity', 'total')
-    # activity = db.random()
-    # lca = LCA({activity: 1}, method=gwp); 
-    # lca.lci(factorize=False); 
-    # lca.lcia()
-    # print(lca.score)
+
     
     # results = np.zeros((2, 1000))
     # for x, method in enumerate((gwp, usetox)):
@@ -91,20 +75,52 @@ def index(request):
         'form': form,
         'categories': Category.objects.all(), 
         'category_picked':'',
-        'classifications': '',
-
+        'classifications':'',
+        'classification_picked': '',
+        'activities': '',
+        'activity_picked': '',
+        'lcaScore': '',
     }
 
     if form.is_valid():
         # instance = form.save(commit=False)
         category_selected = request.POST.get("Category")
-        filtered_classi = Category.objects.get(category_name = category_selected).classification_set.all()
+        classification_selected = request.POST.get("Classification")
+        activity_selected = request.POST.get("Activity")
+        filtered_acti = ''
+        lcaScore = ''
+
+        #filter classification list based on category selected
+        cate_Obj = Category.objects.get(category_name = category_selected)
+        filtered_classi = cate_Obj.classification_set.all()
+
+
+        #filter activity list based on category and classification selected
+        if(classification_selected != ''):
+            classi_Obj = Classification.objects.get(category = cate_Obj, classification = classification_selected)
+            filtered_acti = [ac.activity_name for ac in Activity.objects.filter(category = cate_Obj, classification = classi_Obj)]            
+
+        if(activity_selected != ''):
+            gwp, usetox = ('IPCC 2013', 'climate change', 'GWP 100a'), ('USEtox', 'human toxicity', 'total')
+            for activity in db:
+                if (activity.get('name') == activity_selected):
+                    lca = LCA({activity: 1}, method=gwp); 
+                    lca.lci(factorize=False); 
+                    lca.lcia()
+                    lcaScore = lca.score
+                    break
+
+
 
         context = {
             'form': form,
             'categories': Category.objects.all(),
             'category_picked':category_selected, 
             'classifications': filtered_classi,
+            'classification_picked': classification_selected,
+            'activities': filtered_acti,
+            'activity_picked': activity_selected,
+            'lcaScore': lcaScore,
         }
 
 

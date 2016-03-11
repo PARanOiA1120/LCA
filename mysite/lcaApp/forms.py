@@ -5,6 +5,7 @@ from .models import Category
 class lcaScoreForm(forms.Form):
 	Category = forms.CharField(required=False)
 	Classification = forms.CharField(required=False)
+	Activity = forms.CharField(required=False)
 	def clean_category(self):
 		Category = self.cleaned_data.get('Category')
 		return category
