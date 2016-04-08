@@ -6,6 +6,7 @@ class lcaScoreForm(forms.Form):
 	Category = forms.CharField(required=False)
 	Classification = forms.CharField(required=False)
 	Activity = forms.CharField(required=False)
+	Method = forms.CharField(required=False)
 	def clean_category(self):
 		Category = self.cleaned_data.get('Category')
 		return category
@@ -29,10 +30,6 @@ class lcaScoreForm(forms.Form):
 	# classification = forms.ChoiceField(widget = forms.Select(), choices = activities, required = True)
 
 
-class ContactForm(forms.Form):
-	full_name = forms.CharField()
-	email = forms.EmailField()
-	message = forms.CharField()
 
 
 # class lcaScoreForm(forms.Form):

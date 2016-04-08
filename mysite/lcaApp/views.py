@@ -7,8 +7,8 @@ from django.views import generic
 from django.views.decorators.csrf import csrf_protect
 from django.core.context_processors import csrf
 
-from .forms import lcaScoreForm, ContactForm
-from .models import Category, Classification, Activity
+from .forms import lcaScoreForm
+from .models import Category, Classification, Activity, Methods
 
 from brightway2 import *
 from scipy.stats import kendalltau
@@ -68,6 +68,11 @@ def index(request):
 
     # print(kendalltau(*results))
 
+    # for method in methods.items():
+    #     if len(Methods.objects.filter(method = method[0])) == 0:
+    #         m = Methods(method = method[0])
+    #         m.save()
+
 
     form = lcaScoreForm(request.POST or None)
 
@@ -79,6 +84,8 @@ def index(request):
         'classification_picked': '',
         'activities': '',
         'activity_picked': '',
+        'methods': '',
+        'method_picked': '',
         'lcaScore': '',
     }
 
@@ -87,6 +94,7 @@ def index(request):
         category_selected = request.POST.get("Category")
         classification_selected = request.POST.get("Classification")
         activity_selected = request.POST.get("Activity")
+        method_selected = request.POST.get("Method")
         filtered_acti = ''
         lcaScore = ''
 
@@ -102,6 +110,8 @@ def index(request):
             'classification_picked': '',
             'activities': '',
             'activity_picked': '',
+            'methods': '',
+            'method_picked': '',
             'lcaScore': '',
         }
 
@@ -118,6 +128,8 @@ def index(request):
                 'classification_picked': classification_selected,
                 'activities': filtered_acti,
                 'activity_picked': '',
+                'methods': Methods.objects.all(),
+                'method_picked': '',
                 'lcaScore': '',
             }
 
@@ -125,14 +137,26 @@ def index(request):
 
 
         if(activity_selected != None):
-            gwp, usetox = ('IPCC 2013', 'climate change', 'GWP 100a'), ('USEtox', 'human toxicity', 'total')
+            ac_level = request.POST.get("Level")
+            
+            tmp = method_selected.replace(")", "")
+            tmp = tmp.replace("(", "")
+            tmp = tmp.replace("\'", "")
+            arr = tmp.split(", ")
+
+            method = (arr[0], arr[1], arr[2])
+
+
+            
             for activity in db:
                 if (activity.get('name') == activity_selected):
-                    lca = LCA({activity: 1}, method=gwp); 
+                  
+                    lca = LCA({activity: ac_level}, method = method); 
                     lca.lci(factorize=False); 
                     lca.lcia()
                     lcaScore = lca.score
                     break
+
             context = {
                 'form': form,
                 'categories': Category.objects.all(),
@@ -141,12 +165,15 @@ def index(request):
                 'classification_picked': classification_selected,
                 'activities': filtered_acti,
                 'activity_picked': activity_selected,
-                'lcaScore': lcaScore,
+                'methods': Methods.objects.all(),
+                'method_picked': method_selected,
+                'level': ac_level,
+                'lcaScore': '',
             }
 
 
     return render(request, "lcaApp/index.html", context)
-    #return HttpResponse(loader.get_template('lcaApp/index.html').render(c))
+
 
 
 

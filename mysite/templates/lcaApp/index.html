@@ -104,6 +104,23 @@
             <br>
             {% endif %}
 
+            {% if  classification_picked != '' %}
+            Method&nbsp;&nbsp; <input style="width:350px;" list="Method" name="Method" value="{{method_picked}}">
+            <datalist id="Method">
+                {% for m in methods %}
+                    <option value="{{m}}"> {{m}}
+                {% endfor %}
+            </datalist>
+            <br>
+            <br>
+            {% endif %}
+
+            {% if  classification_picked != '' %}
+            Level&nbsp;&nbsp; <input style="width:200px;" list="Level" name="Level" value="{{level}}">
+            <br>
+            <br>
+            {% endif %}
+
             <input type="submit" value="submit" />
 
         </form>

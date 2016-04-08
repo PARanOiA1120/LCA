@@ -26,6 +26,11 @@ class Activity(models.Model):
     def __str__(self):
         return self.activity_name
 
+class Methods(models.Model):
+    method = models.CharField(max_length=1000)
+    def __str__(self):
+        return self.method
+
 
 
 
